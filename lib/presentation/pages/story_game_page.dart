@@ -87,7 +87,7 @@ class _StoryGamePageState extends State<StoryGamePage>
         appBar: AppBar(
           title: Text(_getStoryTitle()),
           leading: IconButton(
-            onPressed: () => Get.back(),
+            onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_ios),
           ),
         ),
@@ -118,7 +118,7 @@ class _StoryGamePageState extends State<StoryGamePage>
               ),
               const SizedBox(height: 24),
               ElevatedButton.icon(
-                onPressed: () => Get.back(),
+                onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
                 label: const Text('Voltar'),
                 style: ElevatedButton.styleFrom(
@@ -137,13 +137,13 @@ class _StoryGamePageState extends State<StoryGamePage>
       appBar: AppBar(
         title: Text(_getStoryTitle()),
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios),
         ),
         actions: [
           // Share button
           IconButton(
-            onPressed: () => _shareStory(),
+            onPressed: () => _shareStory(context),
             icon: const Icon(Icons.share),
           ),
         ],
@@ -389,7 +389,8 @@ class _StoryGamePageState extends State<StoryGamePage>
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
-            onPressed: () => _toggleCompleted(storyController, isCompleted),
+            onPressed: () =>
+                _toggleCompleted(storyController, isCompleted, context),
             icon: Icon(
               isCompleted ? Icons.check_circle : Icons.check_circle_outline,
             ),
@@ -450,36 +451,39 @@ class _StoryGamePageState extends State<StoryGamePage>
     Get.to(() => StorySolutionPage(story: widget.story));
   }
 
-  void _toggleCompleted(StoryController storyController, bool isCompleted) {
+  void _toggleCompleted(
+      StoryController storyController, bool isCompleted, BuildContext context) {
     if (isCompleted) {
       storyController.markStoryAsIncomplete(widget.story.id);
-      Get.snackbar(
-        'História marcada como incompleta',
-        'A história foi removida da lista de concluídas',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppTheme.warningColor,
-        colorText: AppTheme.textPrimaryColor,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('História marcada como incompleta'),
+          backgroundColor: AppTheme.warningColor,
+          duration: const Duration(seconds: 2),
+        ),
       );
     } else {
       storyController.markStoryAsCompleted(widget.story.id);
-      Get.snackbar(
-        'História concluída!',
-        'Parabéns por resolver este mistério',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppTheme.successColor,
-        colorText: AppTheme.textPrimaryColor,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+              'História concluída! Parabéns por resolver este mistério'),
+          backgroundColor: AppTheme.successColor,
+          duration: const Duration(seconds: 2),
+        ),
       );
     }
   }
 
-  void _shareStory() {
+  void _shareStory(BuildContext context) {
     // TODO: Implement share functionality
-    Get.snackbar(
-      'Compartilhar',
-      'Funcionalidade de compartilhamento em desenvolvimento',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppTheme.accentColor,
-      colorText: AppTheme.textPrimaryColor,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            const Text('Funcionalidade de compartilhamento em desenvolvimento'),
+        backgroundColor: AppTheme.accentColor,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
@@ -494,8 +498,11 @@ class _StoryGamePageState extends State<StoryGamePage>
   }
 
   String _getImageUrl(String imagePath) {
+    print('🖼️ Construindo URL para imagem: $imagePath');
+
     // Se a imagem já é uma URL completa, retorna ela
     if (imagePath.startsWith('http')) {
+      print('🖼️ URL já é completa: $imagePath');
       return imagePath;
     }
 
@@ -503,6 +510,10 @@ class _StoryGamePageState extends State<StoryGamePage>
     // Baseado no exemplo: https://firebasestorage.googleapis.com/v0/b/dark-tales-e67d1.firebasestorage.app/o/id_1.png?alt=media&token=...
     final bucket = 'dark-tales-e67d1.firebasestorage.app';
     final encodedPath = Uri.encodeComponent(imagePath);
-    return 'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
+    final url =
+        'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
+
+    print('🖼️ URL construída: $url');
+    return url;
   }
 }

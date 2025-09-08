@@ -43,8 +43,16 @@ class StorageService {
   // Completed stories
   Future<List<int>> getCompletedStories() async {
     final storiesString = _prefs?.getString(AppConstants.keyCompletedStories);
-    if (storiesString != null) {
-      return storiesString.split(',').map(int.parse).toList();
+    if (storiesString != null && storiesString.isNotEmpty) {
+      try {
+        return storiesString
+            .split(',')
+            .map((s) => int.parse(s.trim()))
+            .toList();
+      } catch (e) {
+        print('Error parsing completed stories: $e');
+        return [];
+      }
     }
     return [];
   }

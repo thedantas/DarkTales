@@ -102,7 +102,7 @@ class _StorySolutionPageState extends State<StorySolutionPage>
         appBar: AppBar(
           title: Text(_getStoryTitle()),
           leading: IconButton(
-            onPressed: () => Get.back(),
+            onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back_ios),
           ),
         ),
@@ -133,7 +133,7 @@ class _StorySolutionPageState extends State<StorySolutionPage>
               ),
               const SizedBox(height: 24),
               ElevatedButton.icon(
-                onPressed: () => Get.back(),
+                onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.arrow_back),
                 label: const Text('Voltar'),
                 style: ElevatedButton.styleFrom(
@@ -152,13 +152,13 @@ class _StorySolutionPageState extends State<StorySolutionPage>
       appBar: AppBar(
         title: Text(_getStoryTitle()),
         leading: IconButton(
-          onPressed: () => Get.back(),
+          onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.arrow_back_ios),
         ),
         actions: [
           // Share button
           IconButton(
-            onPressed: () => _shareSolution(),
+            onPressed: () => _shareSolution(context),
             icon: const Icon(Icons.share),
           ),
         ],
@@ -404,7 +404,7 @@ class _StorySolutionPageState extends State<StorySolutionPage>
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
-            onPressed: () => _markAsCompleted(storyController),
+            onPressed: () => _markAsCompleted(storyController, context),
             icon: const Icon(Icons.check_circle),
             label: const Text('Marcar como Concluída'),
             style: ElevatedButton.styleFrom(
@@ -424,7 +424,7 @@ class _StorySolutionPageState extends State<StorySolutionPage>
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
-            onPressed: () => Get.back(),
+            onPressed: () => Navigator.pop(context),
             icon: const Icon(Icons.arrow_back),
             label: const Text('Voltar às Histórias'),
             style: OutlinedButton.styleFrom(
@@ -478,25 +478,27 @@ class _StorySolutionPageState extends State<StorySolutionPage>
     _revealController.forward();
   }
 
-  void _markAsCompleted(StoryController storyController) {
+  void _markAsCompleted(StoryController storyController, BuildContext context) {
     storyController.markStoryAsCompleted(widget.story.id);
-    Get.snackbar(
-      'História concluída!',
-      'Parabéns por resolver este mistério',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppTheme.successColor,
-      colorText: AppTheme.textPrimaryColor,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+            'História concluída! Parabéns por resolver este mistério'),
+        backgroundColor: AppTheme.successColor,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 
-  void _shareSolution() {
+  void _shareSolution(BuildContext context) {
     // TODO: Implement share functionality
-    Get.snackbar(
-      'Compartilhar',
-      'Funcionalidade de compartilhamento em desenvolvimento',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppTheme.accentColor,
-      colorText: AppTheme.textPrimaryColor,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            const Text('Funcionalidade de compartilhamento em desenvolvimento'),
+        backgroundColor: AppTheme.accentColor,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 

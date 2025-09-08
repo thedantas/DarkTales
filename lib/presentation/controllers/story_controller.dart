@@ -48,11 +48,7 @@ class StoryController extends GetxController {
       }
     } catch (e) {
       print('Error loading stories: $e');
-      Get.snackbar(
-        'Erro',
-        'Falha ao carregar as histórias',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      // Removido Get.snackbar para evitar problemas de contexto
     } finally {
       _isLoading.value = false;
     }

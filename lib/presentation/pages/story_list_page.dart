@@ -395,8 +395,11 @@ class StoryListPage extends StatelessWidget {
   }
 
   String _getImageUrl(String imagePath) {
+    print('🖼️ [Lista] Construindo URL para imagem: $imagePath');
+
     // Se a imagem já é uma URL completa, retorna ela
     if (imagePath.startsWith('http')) {
+      print('🖼️ [Lista] URL já é completa: $imagePath');
       return imagePath;
     }
 
@@ -404,6 +407,10 @@ class StoryListPage extends StatelessWidget {
     // Baseado no exemplo: https://firebasestorage.googleapis.com/v0/b/dark-tales-e67d1.firebasestorage.app/o/id_1.png?alt=media&token=...
     final bucket = 'dark-tales-e67d1.firebasestorage.app';
     final encodedPath = Uri.encodeComponent(imagePath);
-    return 'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
+    final url =
+        'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
+
+    print('🖼️ [Lista] URL construída: $url');
+    return url;
   }
 }

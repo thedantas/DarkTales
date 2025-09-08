@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/data/models/story_model.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/pages/story_game_page.dart';
@@ -31,7 +32,10 @@ class StoryListPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => _showFilterDialog(context, storyController),
+            onPressed: () {
+              AnalyticsService.to.logCustomEvent('filter_dialog_opened');
+              _showFilterDialog(context, storyController);
+            },
             icon: const Icon(Icons.filter_list),
           ),
         ],
@@ -318,6 +322,17 @@ class StoryListPage extends StatelessWidget {
   }
 
   void _openStory(BuildContext context, StoryModel story) {
+    // Log da abertura da história
+    final storyController = Get.find<StoryController>();
+    final content = storyController.getStoryContentInCurrentLanguage(story);
+    final title = content?.title ?? 'História ${story.id}';
+
+    AnalyticsService.to.logStoryOpened(
+      story.id,
+      title,
+      story.level,
+    );
+
     Get.to(() => StoryGamePage(story: story));
   }
 

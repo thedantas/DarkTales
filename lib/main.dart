@@ -6,6 +6,7 @@ import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/controllers/language_controller.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/presentation/pages/splash_page.dart';
 import 'firebase_options.dart';
 
@@ -16,6 +17,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize services
+  Get.put(AnalyticsService());
 
   // Initialize controllers
   Get.put(AppController());
@@ -37,6 +41,8 @@ class DarkTalesApp extends StatelessWidget {
       home: const SplashPage(),
       defaultTransition: Transition.fadeIn,
       transitionDuration: AppConstants.pageTransitionDuration,
+      // Adiciona observer do Analytics para rastreamento automático de navegação
+      navigatorObservers: [AnalyticsService.to.observer],
     );
   }
 }

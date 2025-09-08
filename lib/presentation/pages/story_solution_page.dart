@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/data/models/story_model.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 
@@ -480,6 +481,20 @@ class _StorySolutionPageState extends State<StorySolutionPage>
 
   void _markAsCompleted(StoryController storyController, BuildContext context) {
     storyController.markStoryAsCompleted(widget.story.id);
+
+    // Log da conclusão da história
+    final timeSpent = AnalyticsService.to.getElapsedTime() ?? 0;
+    final content =
+        storyController.getStoryContentInCurrentLanguage(widget.story);
+    final title = content?.title ?? 'História ${widget.story.id}';
+
+    AnalyticsService.to.logStoryCompleted(
+      widget.story.id,
+      title,
+      widget.story.level,
+      timeSpent,
+    );
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: const Text(

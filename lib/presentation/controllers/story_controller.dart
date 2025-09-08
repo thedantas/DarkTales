@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:darktales/data/models/story_model.dart';
 import 'package:darktales/core/services/firebase_service_v2.dart';
 import 'package:darktales/core/services/storage_service.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/presentation/controllers/language_controller.dart';
 
 class StoryController extends GetxController {
@@ -265,6 +266,13 @@ class StoryController extends GetxController {
         totalStories: totalStories,
         completedStories: completedStories,
         difficultyProgress: difficultyProgress,
+      );
+
+      // Log do progresso no Analytics
+      AnalyticsService.to.logProgressUpdate(
+        totalStories,
+        completedStories,
+        difficultyProgress,
       );
 
       print(

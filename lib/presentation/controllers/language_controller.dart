@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:darktales/core/services/language_service.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 
 class LanguageController extends GetxController {
   final LanguageService _languageService = LanguageService();
@@ -59,8 +60,17 @@ class LanguageController extends GetxController {
     _isLoading.value = true;
 
     try {
+      final oldLanguage = _currentLanguage.value;
       await _languageService.setLanguage(languageCode);
       _currentLanguage.value = languageCode;
+
+      // Log da mudança de idioma
+      if (oldLanguage.isNotEmpty) {
+        AnalyticsService.to.logLanguageChanged(oldLanguage, languageCode);
+      } else {
+        AnalyticsService.to
+            .logLanguageSelected(languageCode, _isFirstTime.value);
+      }
 
       // Marcar que não é mais primeira vez
       if (_isFirstTime.value) {

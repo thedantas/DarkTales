@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/pages/story_list_page.dart';
@@ -28,7 +29,10 @@ class HomePage extends StatelessWidget {
         actions: [
           // Settings
           IconButton(
-            onPressed: () => Get.to(() => const SettingsPage()),
+            onPressed: () {
+              AnalyticsService.to.logSettingsOpened();
+              Get.to(() => const SettingsPage());
+            },
             icon: const Icon(Icons.settings),
           ),
         ],
@@ -313,7 +317,12 @@ class HomePage extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        onPressed: () => Get.to(() => const StoryListPage()),
+        onPressed: () {
+          AnalyticsService.to.logPageView('story_list', parameters: {
+            'source': 'home_button',
+          });
+          Get.to(() => const StoryListPage());
+        },
         icon: const Icon(Icons.list),
         label: const Text('Ver Todas as Histórias'),
         style: ElevatedButton.styleFrom(

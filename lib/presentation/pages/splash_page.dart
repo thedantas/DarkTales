@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/language_controller.dart';
 import 'package:darktales/presentation/pages/tutorial_page.dart';
@@ -108,12 +109,25 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     final appController = Get.find<AppController>();
     final languageController = Get.find<LanguageController>();
 
+    // Log do splash screen
+    AnalyticsService.to.logPageView('splash_screen', parameters: {
+      'is_first_time': languageController.isFirstTime,
+      'is_first_launch': appController.isFirstLaunch,
+    });
+
     // Verificar se é primeira vez (idioma)
     if (languageController.isFirstTime) {
+      AnalyticsService.to.logPageView('language_selection', parameters: {
+        'is_first_time': true,
+      });
       Get.off(() => const LanguageSelectionPage(isFirstTime: true));
     } else if (appController.isFirstLaunch) {
+      AnalyticsService.to.logPageView('tutorial', parameters: {
+        'is_first_launch': true,
+      });
       Get.off(() => const TutorialPage());
     } else {
+      AnalyticsService.to.logPageView('home');
       Get.off(() => const HomePage());
     }
   }

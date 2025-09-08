@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
+import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/data/models/story_model.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/pages/story_solution_page.dart';
@@ -31,6 +32,9 @@ class _StoryGamePageState extends State<StoryGamePage>
     super.initState();
     _initializeAnimations();
     _startAnimations();
+
+    // Inicia timer para medir tempo gasto na história
+    AnalyticsService.to.startTimer();
   }
 
   void _initializeAnimations() {
@@ -448,6 +452,17 @@ class _StoryGamePageState extends State<StoryGamePage>
   }
 
   void _showSolution(BuildContext context) {
+    // Log da visualização da solução
+    final storyController = Get.find<StoryController>();
+    final content =
+        storyController.getStoryContentInCurrentLanguage(widget.story);
+    final title = content?.title ?? 'História ${widget.story.id}';
+
+    AnalyticsService.to.logSolutionViewed(
+      widget.story.id,
+      title,
+    );
+
     Get.to(() => StorySolutionPage(story: widget.story));
   }
 
@@ -464,6 +479,20 @@ class _StoryGamePageState extends State<StoryGamePage>
       );
     } else {
       storyController.markStoryAsCompleted(widget.story.id);
+
+      // Log da conclusão da história
+      final timeSpent = AnalyticsService.to.getElapsedTime() ?? 0;
+      final content =
+          storyController.getStoryContentInCurrentLanguage(widget.story);
+      final title = content?.title ?? 'História ${widget.story.id}';
+
+      AnalyticsService.to.logStoryCompleted(
+        widget.story.id,
+        title,
+        widget.story.level,
+        timeSpent,
+      );
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(

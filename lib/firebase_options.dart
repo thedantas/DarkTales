@@ -82,4 +82,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'dark-tales-e67d1.firebasestorage.app',
     measurementId: 'G-CS9JZLFNDD',
   );
+
 }

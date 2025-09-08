@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/core/services/analytics_service.dart';
+import 'package:darktales/presentation/widgets/banner_ad_widget.dart';
 import 'package:darktales/data/models/story_model.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/pages/story_game_page.dart';
@@ -40,45 +41,54 @@ class StoryListPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Obx(() {
-        if (storyController.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.accentColor),
-            ),
-          );
-        }
+      body: Column(
+        children: [
+          Expanded(
+            child: Obx(() {
+              if (storyController.isLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppTheme.accentColor),
+                  ),
+                );
+              }
 
-        final stories = difficulty != null
-            ? storyController.getStoriesByDifficulty(difficulty!)
-            : storyController.filteredStories;
+              final stories = difficulty != null
+                  ? storyController.getStoriesByDifficulty(difficulty!)
+                  : storyController.filteredStories;
 
-        if (stories.isEmpty) {
-          return _buildEmptyState(context);
-        }
+              if (stories.isEmpty) {
+                return _buildEmptyState(context);
+              }
 
-        return GridView.builder(
-          padding: const EdgeInsets.all(AppConstants.defaultPadding),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.8,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
+              return GridView.builder(
+                padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.8,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: stories.length,
+                itemBuilder: (context, index) {
+                  final story = stories[index];
+                  final isCompleted =
+                      storyController.isStoryCompleted(story.id);
+
+                  return _buildStoryCard(
+                    context,
+                    story,
+                    isCompleted,
+                    () => _openStory(context, story),
+                  );
+                },
+              );
+            }),
           ),
-          itemCount: stories.length,
-          itemBuilder: (context, index) {
-            final story = stories[index];
-            final isCompleted = storyController.isStoryCompleted(story.id);
-
-            return _buildStoryCard(
-              context,
-              story,
-              isCompleted,
-              () => _openStory(context, story),
-            );
-          },
-        );
-      }),
+          const BannerAdWidget(),
+        ],
+      ),
     );
   }
 

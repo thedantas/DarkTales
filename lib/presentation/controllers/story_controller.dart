@@ -3,6 +3,7 @@ import 'package:darktales/data/models/story_model.dart';
 import 'package:darktales/core/services/firebase_service_v2.dart';
 import 'package:darktales/core/services/storage_service.dart';
 import 'package:darktales/core/services/analytics_service.dart';
+import 'package:darktales/core/services/ads_service.dart';
 import 'package:darktales/presentation/controllers/language_controller.dart';
 
 class StoryController extends GetxController {
@@ -103,6 +104,9 @@ class StoryController extends GetxController {
 
       // Save progress
       await _saveProgress();
+
+      // Mostrar anúncio interstitial após completar história
+      AdsService.to.showInterstitialAd();
     } catch (e) {
       print('Error marking story as completed: $e');
     }

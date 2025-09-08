@@ -5,6 +5,8 @@ import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/presentation/controllers/language_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/pages/language_selection_page.dart';
+import 'package:darktales/presentation/pages/premium_page.dart';
+import 'package:darktales/core/services/purchase_service.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -37,6 +39,17 @@ class SettingsPage extends StatelessWidget {
                     languageController: languageController,
                     onTap: () => _openLanguageSelection(),
                   )),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+
+          // Seção Premium
+          _buildSection(
+            context,
+            title: 'Premium',
+            children: [
+              Obx(() => _buildPremiumTile()),
             ],
           ),
 
@@ -117,6 +130,74 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPremiumTile() {
+    final purchaseService = Get.find<PurchaseService>();
+
+    return ListTile(
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.amber, Colors.orange],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: const Icon(
+          Icons.star,
+          color: Colors.white,
+        ),
+      ),
+      title: Text(
+        purchaseService.isPremium
+            ? 'DarkTales Premium'
+            : 'Upgrade para Premium',
+        style: const TextStyle(
+          color: AppTheme.primaryColor,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        purchaseService.isPremium
+            ? 'Você tem acesso completo'
+            : 'Remova anúncios e desbloqueie tudo',
+        style: const TextStyle(
+          color: AppTheme.textSecondaryColor,
+        ),
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (purchaseService.isPremium)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Text(
+                'ATIVO',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          const SizedBox(width: 8),
+          const Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: AppTheme.textSecondaryColor,
+          ),
+        ],
+      ),
+      onTap: () => Get.to(() => const PremiumPage()),
     );
   }
 

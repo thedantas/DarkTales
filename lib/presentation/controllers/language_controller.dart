@@ -17,7 +17,10 @@ class LanguageController extends GetxController {
 
   // Setters
   void setCurrentLanguage(String languageCode) {
+    print('🔄 LanguageController.setCurrentLanguage: $languageCode');
+    print('🔄 Valor anterior: ${_currentLanguage.value}');
     _currentLanguage.value = languageCode;
+    print('🔄 Valor atual: ${_currentLanguage.value}');
   }
 
   // Lista de idiomas suportados

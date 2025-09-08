@@ -75,6 +75,9 @@ class LanguageSelectionPage extends StatelessWidget {
                     );
                   }
 
+                  // Força a observação do currentLanguage
+                  final currentLang = languageController.currentLanguage;
+
                   return ListView.builder(
                     itemCount: languageController.supportedLanguages.length,
                     itemBuilder: (context, index) {
@@ -84,6 +87,11 @@ class LanguageSelectionPage extends StatelessWidget {
                       final languageName = language.value;
                       final isSelected =
                           languageController.isLanguageSelected(languageCode);
+
+                      // Debug log
+                      if (isSelected) {
+                        print('🎯 Idioma $languageCode está selecionado');
+                      }
 
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
@@ -206,7 +214,10 @@ class LanguageSelectionPage extends StatelessWidget {
   }
 
   void _selectLanguage(LanguageController controller, String languageCode) {
+    print('🔄 Selecionando idioma: $languageCode');
+    print('🔄 Idioma atual antes: ${controller.currentLanguage}');
     controller.setCurrentLanguage(languageCode);
+    print('🔄 Idioma atual depois: ${controller.currentLanguage}');
   }
 
   void _continueToApp(LanguageController controller) {

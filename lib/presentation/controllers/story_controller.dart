@@ -186,9 +186,18 @@ class StoryController extends GetxController {
   dynamic getStoryContentInCurrentLanguage(StoryModel story) {
     final currentLanguage = _languageController.currentLanguage;
 
+    print('🔍 StoryController - Idioma atual: $currentLanguage');
+    print(
+        '🔍 StoryController - Idioma do controller: ${_languageController.currentLanguage}');
+    print(
+        '🔍 StoryController - Controller está carregando: ${_languageController.isLoading}');
     print(
         '🔍 Buscando conteúdo para história ${story.id} no idioma: $currentLanguage');
     print('📋 Idiomas disponíveis: ${story.availableLanguages}');
+    print('📋 Traduções disponíveis: ${story.translations.keys.toList()}');
+
+    // Debug do estado do idioma
+    _languageController.debugLanguageState();
 
     // Verificar se o idioma está disponível
     if (!story.translations.containsKey(currentLanguage)) {

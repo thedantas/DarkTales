@@ -206,15 +206,33 @@ class LanguageSelectionPage extends StatelessWidget {
   }
 
   void _selectLanguage(LanguageController controller, String languageCode) {
-    controller.changeLanguage(languageCode);
+    controller.setCurrentLanguage(languageCode);
   }
 
   void _continueToApp(LanguageController controller) {
     Get.offAll(() => const HomePage());
   }
 
-  void _saveAndClose(LanguageController controller) {
-    Get.back();
+  void _saveAndClose(LanguageController controller) async {
+    print('💾 Salvando idioma selecionado: ${controller.currentLanguage}');
+
+    if (controller.currentLanguage.isNotEmpty) {
+      print('✅ Idioma válido encontrado, salvando...');
+      await controller.changeLanguage(controller.currentLanguage);
+      print('✅ Idioma salvo com sucesso!');
+
+      // Recarregar o idioma para garantir que está sincronizado
+      await controller.reloadLanguage();
+      print('🔄 Idioma recarregado após salvamento');
+
+      Get.back();
+    } else {
+      print('⚠️ Nenhum idioma selecionado, usando inglês como padrão');
+      // Se nenhum idioma foi selecionado, usar inglês como padrão
+      await controller.changeLanguage('en');
+      await controller.reloadLanguage();
+      Get.back();
+    }
   }
 
   String _getLanguageFlag(String languageCode) {

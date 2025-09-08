@@ -15,6 +15,11 @@ class LanguageController extends GetxController {
   bool get isFirstTime => _isFirstTime.value;
   bool get isLoading => _isLoading.value;
 
+  // Setters
+  void setCurrentLanguage(String languageCode) {
+    _currentLanguage.value = languageCode;
+  }
+
   // Lista de idiomas suportados
   List<MapEntry<String, String>> get supportedLanguages =>
       _languageService.getSupportedLanguagesList();
@@ -48,12 +53,11 @@ class LanguageController extends GetxController {
 
   /// Alterar idioma
   Future<void> changeLanguage(String languageCode) async {
+    print('🔄 Iniciando mudança de idioma para: $languageCode');
+    print('🔄 Idioma atual antes da mudança: ${_currentLanguage.value}');
+
     if (!_languageService.isLanguageSupported(languageCode)) {
-      Get.snackbar(
-        'Erro',
-        'Idioma não suportado: $languageCode',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      print('❌ Idioma não suportado: $languageCode');
       return;
     }
 
@@ -61,8 +65,14 @@ class LanguageController extends GetxController {
 
     try {
       final oldLanguage = _currentLanguage.value;
+      print('💾 Salvando idioma $languageCode no SharedPreferences...');
       await _languageService.setLanguage(languageCode);
+      print('✅ Idioma salvo no SharedPreferences com sucesso!');
+
       _currentLanguage.value = languageCode;
+      print('🔄 Idioma atualizado no controller: ${_currentLanguage.value}');
+
+      print('🌍 Idioma atual após mudança: ${_currentLanguage.value}');
 
       // Log da mudança de idioma
       if (oldLanguage.isNotEmpty) {
@@ -78,20 +88,11 @@ class LanguageController extends GetxController {
         _isFirstTime.value = false;
       }
 
-      Get.snackbar(
-        'Sucesso',
-        'Idioma alterado para ${_languageService.getLanguageName(languageCode)}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-
       print('🌍 Idioma alterado para: $languageCode');
+      print(
+          '✅ Idioma salvo com sucesso: ${_languageService.getLanguageName(languageCode)}');
     } catch (e) {
       print('❌ Erro ao alterar idioma: $e');
-      Get.snackbar(
-        'Erro',
-        'Falha ao alterar idioma',
-        snackPosition: SnackPosition.BOTTOM,
-      );
     } finally {
       _isLoading.value = false;
     }
@@ -102,9 +103,39 @@ class LanguageController extends GetxController {
     return _languageService.getLanguageName(_currentLanguage.value);
   }
 
+  /// Recarregar idioma do SharedPreferences
+  Future<void> reloadLanguage() async {
+    print('🔄 Recarregando idioma do SharedPreferences...');
+    try {
+      final savedLanguage = await _languageService.getCurrentLanguage();
+      print('🔄 Idioma carregado do SharedPreferences: $savedLanguage');
+      _currentLanguage.value = savedLanguage;
+      print('✅ Idioma recarregado no controller: ${_currentLanguage.value}');
+    } catch (e) {
+      print('❌ Erro ao recarregar idioma: $e');
+    }
+  }
+
   /// Obter nome de um idioma específico
   String getLanguageName(String languageCode) {
     return _languageService.getLanguageName(languageCode);
+  }
+
+  /// Debug: Verificar estado atual do idioma
+  Future<void> debugLanguageState() async {
+    print('🔍 === DEBUG LANGUAGE STATE ===');
+    print('🔍 Controller currentLanguage: ${_currentLanguage.value}');
+    print('🔍 Controller isLoading: ${_isLoading.value}');
+    print('🔍 Controller isFirstTime: ${_isFirstTime.value}');
+
+    try {
+      final savedLanguage = await _languageService.getCurrentLanguage();
+      print('🔍 LanguageService getCurrentLanguage: $savedLanguage');
+    } catch (e) {
+      print('🔍 Erro ao obter idioma do LanguageService: $e');
+    }
+
+    print('🔍 === END DEBUG ===');
   }
 
   /// Verificar se um idioma está selecionado

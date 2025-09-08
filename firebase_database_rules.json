@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "stories": {
+      ".read": true,
+      ".write": true,
+      "$storyId": {
+        ".validate": "newData.hasChildren(['id', 'difficulty', 'category']) && newData.child('id').isNumber() && newData.child('difficulty').isString() && newData.child('category').isString()"
+      }
+    }
+  }
+}

@@ -2,166 +2,264 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
-import 'package:darktales/presentation/controllers/app_controller.dart';
-import 'package:darktales/presentation/controllers/story_controller.dart';
+import 'package:darktales/presentation/controllers/language_controller.dart';
+import 'package:darktales/presentation/pages/home_page.dart';
 
 class LanguageSelectionPage extends StatelessWidget {
-  const LanguageSelectionPage({super.key});
+  final bool isFirstTime;
+
+  const LanguageSelectionPage({
+    super.key,
+    this.isFirstTime = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final appController = Get.find<AppController>();
-    final storyController = Get.find<StoryController>();
+    final languageController = Get.find<LanguageController>();
 
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
-      appBar: AppBar(
-        title: const Text('Idioma'),
-        leading: IconButton(
-          onPressed: () => Get.back(),
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
-      ),
-      body: Obx(() {
-        return ListView.builder(
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(AppConstants.defaultPadding),
-          itemCount: AppConstants.supportedLanguages.length,
-          itemBuilder: (context, index) {
-            final languageCode = AppConstants.supportedLanguages[index];
-            final isSelected = appController.selectedLanguage == languageCode;
-            final storiesCount =
-                storyController.getStoriesByLanguage(languageCode).length;
+          child: Column(
+            children: [
+              // Header
+              if (isFirstTime) ...[
+                const SizedBox(height: 40),
+                Icon(
+                  Icons.language,
+                  size: 80,
+                  color: AppTheme.accentColor,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'Bem-vindo ao Dark Tales',
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontSize: 28,
+                        color: AppTheme.primaryColor,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'Escolha seu idioma preferido',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontSize: 16,
+                        color: AppTheme.textSecondaryColor,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+              ] else ...[
+                const SizedBox(height: 20),
+                Text(
+                  'Selecionar Idioma',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontSize: 24,
+                        color: AppTheme.primaryColor,
+                      ),
+                ),
+                const SizedBox(height: 20),
+              ],
 
-            return _buildLanguageTile(
-              context,
-              languageCode,
-              appController.getLanguageName(languageCode),
-              storiesCount,
-              isSelected,
-              () => _selectLanguage(appController, languageCode),
-            );
-          },
-        );
-      }),
-    );
-  }
+              // Lista de idiomas
+              Expanded(
+                child: Obx(() {
+                  if (languageController.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppTheme.accentColor),
+                      ),
+                    );
+                  }
 
-  Widget _buildLanguageTile(
-    BuildContext context,
-    String languageCode,
-    String languageName,
-    int storiesCount,
-    bool isSelected,
-    VoidCallback onTap,
-  ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppTheme.accentColor.withOpacity(0.1)
-                  : AppTheme.surfaceColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color:
-                    isSelected ? AppTheme.accentColor : AppTheme.secondaryColor,
-                width: isSelected ? 2 : 1,
-              ),
-            ),
-            child: Row(
-              children: [
-                // Radio button
-                Container(
-                  width: 24,
-                  height: 24,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected
-                          ? AppTheme.accentColor
-                          : AppTheme.textSecondaryColor,
-                      width: 2,
-                    ),
-                  ),
-                  child: isSelected
-                      ? Center(
-                          child: Container(
-                            width: 12,
-                            height: 12,
-                            decoration: const BoxDecoration(
-                              color: AppTheme.accentColor,
-                              shape: BoxShape.circle,
+                  return ListView.builder(
+                    itemCount: languageController.supportedLanguages.length,
+                    itemBuilder: (context, index) {
+                      final language =
+                          languageController.supportedLanguages[index];
+                      final languageCode = language.key;
+                      final languageName = language.value;
+                      final isSelected =
+                          languageController.isLanguageSelected(languageCode);
+
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        color: isSelected
+                            ? AppTheme.accentColor.withOpacity(0.1)
+                            : AppTheme.surfaceColor,
+                        child: ListTile(
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppTheme.accentColor
+                                  : AppTheme.primaryColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Text(
+                                _getLanguageFlag(languageCode),
+                                style: const TextStyle(fontSize: 20),
+                              ),
                             ),
                           ),
-                        )
-                      : null,
-                ),
-
-                const SizedBox(width: 16),
-
-                // Language name
-                Expanded(
-                  child: Text(
-                    languageName,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppTheme.textPrimaryColor,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.normal,
+                          title: Text(
+                            languageName,
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: isSelected
+                                          ? AppTheme.accentColor
+                                          : AppTheme.primaryColor,
+                                    ),
+                          ),
+                          subtitle: Text(
+                            _getLanguageDescription(languageCode),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          trailing: isSelected
+                              ? Icon(
+                                  Icons.check_circle,
+                                  color: AppTheme.accentColor,
+                                )
+                              : null,
+                          onTap: () =>
+                              _selectLanguage(languageController, languageCode),
                         ),
+                      );
+                    },
+                  );
+                }),
+              ),
+
+              // Botões
+              if (isFirstTime) ...[
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => _continueToApp(languageController),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.accentColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Continuar',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
                   ),
                 ),
-
-                // Stories count
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppTheme.accentColor.withOpacity(0.2)
-                        : AppTheme.secondaryColor,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    '$storiesCount ${_getStoriesText(storiesCount)}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isSelected
-                              ? AppTheme.accentColor
-                              : AppTheme.textSecondaryColor,
-                          fontWeight: FontWeight.w500,
+              ] else ...[
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Get.back(),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppTheme.primaryColor,
+                          side: BorderSide(color: AppTheme.primaryColor),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                  ),
+                        child: const Text('Cancelar'),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => _saveAndClose(languageController),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.accentColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text('Salvar'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  String _getStoriesText(int count) {
-    if (count == 1) return 'história';
-    return 'histórias';
+  void _selectLanguage(LanguageController controller, String languageCode) {
+    controller.changeLanguage(languageCode);
   }
 
-  void _selectLanguage(AppController appController, String languageCode) {
-    appController.setSelectedLanguage(languageCode);
-    Get.back();
+  void _continueToApp(LanguageController controller) {
+    Get.offAll(() => const HomePage());
+  }
 
-    // Show confirmation
-    Get.snackbar(
-      'Idioma alterado',
-      'O idioma foi alterado para ${appController.getLanguageName(languageCode)}',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppTheme.accentColor,
-      colorText: AppTheme.textPrimaryColor,
-      duration: const Duration(seconds: 2),
-    );
+  void _saveAndClose(LanguageController controller) {
+    Get.back();
+  }
+
+  String _getLanguageFlag(String languageCode) {
+    switch (languageCode) {
+      case 'pt-br':
+        return '🇧🇷';
+      case 'en':
+        return '🇺🇸';
+      case 'es':
+        return '🇪🇸';
+      case 'fr':
+        return '🇫🇷';
+      case 'de':
+        return '🇩🇪';
+      case 'it':
+        return '🇮🇹';
+      case 'ja':
+        return '🇯🇵';
+      case 'ru':
+        return '🇷🇺';
+      default:
+        return '🌍';
+    }
+  }
+
+  String _getLanguageDescription(String languageCode) {
+    switch (languageCode) {
+      case 'pt-br':
+        return 'Idioma detectado do seu dispositivo';
+      case 'en':
+        return 'English language';
+      case 'es':
+        return 'Idioma español';
+      case 'fr':
+        return 'Langue française';
+      case 'de':
+        return 'Deutsche Sprache';
+      case 'it':
+        return 'Lingua italiana';
+      case 'ja':
+        return '日本語';
+      case 'ru':
+        return 'Русский язык';
+      default:
+        return 'Language';
+    }
   }
 }

@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/presentation/controllers/app_controller.dart';
+import 'package:darktales/presentation/controllers/language_controller.dart';
 import 'package:darktales/presentation/pages/tutorial_page.dart';
 import 'package:darktales/presentation/pages/home_page.dart';
+import 'package:darktales/presentation/pages/language_selection_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -104,8 +106,12 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   void _navigateToNextPage() {
     final appController = Get.find<AppController>();
+    final languageController = Get.find<LanguageController>();
 
-    if (appController.isFirstLaunch) {
+    // Verificar se é primeira vez (idioma)
+    if (languageController.isFirstTime) {
+      Get.off(() => const LanguageSelectionPage(isFirstTime: true));
+    } else if (appController.isFirstLaunch) {
       Get.off(() => const TutorialPage());
     } else {
       Get.off(() => const HomePage());

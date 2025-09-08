@@ -4,9 +4,8 @@ import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
-import 'package:darktales/presentation/pages/tutorial_page.dart';
-import 'package:darktales/presentation/pages/language_selection_page.dart';
 import 'package:darktales/presentation/pages/story_list_page.dart';
+import 'package:darktales/presentation/pages/settings_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -27,15 +26,10 @@ class HomePage extends StatelessWidget {
           ),
         ),
         actions: [
-          // Language selection
+          // Settings
           IconButton(
-            onPressed: () => Get.to(() => const LanguageSelectionPage()),
-            icon: const Icon(Icons.language),
-          ),
-          // Tutorial
-          IconButton(
-            onPressed: () => Get.to(() => const TutorialPage()),
-            icon: const Icon(Icons.help_outline),
+            onPressed: () => Get.to(() => const SettingsPage()),
+            icon: const Icon(Icons.settings),
           ),
         ],
       ),

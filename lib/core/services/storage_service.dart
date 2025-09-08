@@ -70,6 +70,37 @@ class StorageService {
     return completedStories.contains(storyId);
   }
 
+  // Progress tracking
+  Future<void> saveProgress({
+    required int totalStories,
+    required int completedStories,
+    required Map<String, int> difficultyProgress,
+  }) async {
+    await _prefs?.setInt('total_stories', totalStories);
+    await _prefs?.setInt('completed_stories', completedStories);
+
+    // Save difficulty progress
+    for (final entry in difficultyProgress.entries) {
+      await _prefs?.setInt('difficulty_${entry.key}', entry.value);
+    }
+  }
+
+  Future<Map<String, dynamic>> getProgress() async {
+    final totalStories = _prefs?.getInt('total_stories') ?? 0;
+    final completedStories = _prefs?.getInt('completed_stories') ?? 0;
+
+    final difficultyProgress = <String, int>{};
+    difficultyProgress['easy'] = _prefs?.getInt('difficulty_easy') ?? 0;
+    difficultyProgress['normal'] = _prefs?.getInt('difficulty_normal') ?? 0;
+    difficultyProgress['hard'] = _prefs?.getInt('difficulty_hard') ?? 0;
+
+    return {
+      'totalStories': totalStories,
+      'completedStories': completedStories,
+      'difficultyProgress': difficultyProgress,
+    };
+  }
+
   // Clear all data
   Future<void> clearAllData() async {
     await _prefs?.clear();

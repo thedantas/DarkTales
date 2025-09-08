@@ -1,11 +1,13 @@
 import 'package:get/get.dart';
 import 'package:darktales/data/models/story_model.dart';
-import 'package:darktales/core/services/firebase_service.dart';
+import 'package:darktales/core/services/firebase_service_v2.dart';
 import 'package:darktales/core/services/storage_service.dart';
+import 'package:darktales/presentation/controllers/language_controller.dart';
 
 class StoryController extends GetxController {
-  final FirebaseService _firebaseService = FirebaseService();
+  final FirebaseServiceV2 _firebaseService = FirebaseServiceV2();
   final StorageService _storageService = StorageService();
+  final LanguageController _languageController = Get.find<LanguageController>();
 
   // Observable variables
   final RxList<StoryModel> _stories = <StoryModel>[].obs;
@@ -37,6 +39,13 @@ class StoryController extends GetxController {
       final stories = await _firebaseService.getStories();
       _stories.value = stories;
       _filteredStories.value = stories;
+
+      // Debug: mostrar informações das histórias carregadas
+      print('📚 Histórias carregadas: ${stories.length}');
+      for (final story in stories) {
+        print(
+            '   📖 História ${story.id}: level=${story.level}, difficulty=${story.difficulty}');
+      }
     } catch (e) {
       print('Error loading stories: $e');
       Get.snackbar(
@@ -94,6 +103,9 @@ class StoryController extends GetxController {
     try {
       await _storageService.addCompletedStory(storyId);
       _completedStories.add(storyId);
+
+      // Save progress
+      await _saveProgress();
     } catch (e) {
       print('Error marking story as completed: $e');
     }
@@ -103,6 +115,9 @@ class StoryController extends GetxController {
     try {
       await _storageService.removeCompletedStory(storyId);
       _completedStories.remove(storyId);
+
+      // Save progress
+      await _saveProgress();
     } catch (e) {
       print('Error marking story as incomplete: $e');
     }
@@ -113,7 +128,35 @@ class StoryController extends GetxController {
   }
 
   List<StoryModel> getStoriesByDifficulty(String difficulty) {
-    return _stories.where((story) => story.difficulty == difficulty).toList();
+    // Mapear strings de dificuldade para níveis
+    int level;
+    switch (difficulty.toLowerCase()) {
+      case 'fácil':
+      case 'easy':
+        level = 0;
+        break;
+      case 'normal':
+      case 'médio':
+      case 'medium':
+        level = 1;
+        break;
+      case 'difícil':
+      case 'hard':
+        level = 2;
+        break;
+      default:
+        // Para compatibilidade com dados antigos
+        return _stories
+            .where((story) => story.difficulty == difficulty)
+            .toList();
+    }
+
+    print(
+        '🔍 Buscando histórias com nível $level para dificuldade "$difficulty"');
+    final result = _stories.where((story) => story.level == level).toList();
+    print('📊 Encontradas ${result.length} histórias com nível $level');
+
+    return result;
   }
 
   List<StoryModel> getStoriesByLanguage(String language) {
@@ -132,5 +175,106 @@ class StoryController extends GetxController {
 
   void refreshStories() {
     _loadStories();
+  }
+
+  /// Obter histórias no idioma atual
+  List<StoryModel> getStoriesInCurrentLanguage() {
+    final currentLanguage = _languageController.currentLanguage;
+    return _stories
+        .where((story) => story.translations.containsKey(currentLanguage))
+        .toList();
+  }
+
+  /// Obter conteúdo de uma história no idioma atual
+  dynamic getStoryContentInCurrentLanguage(StoryModel story) {
+    final currentLanguage = _languageController.currentLanguage;
+
+    print(
+        '🔍 Buscando conteúdo para história ${story.id} no idioma: $currentLanguage');
+    print('📋 Idiomas disponíveis: ${story.availableLanguages}');
+
+    // Verificar se o idioma está disponível
+    if (!story.translations.containsKey(currentLanguage)) {
+      print('❌ Idioma $currentLanguage não encontrado nas traduções');
+
+      // Tentar fallback para pt-br se não for o idioma atual
+      if (currentLanguage != 'pt-br' &&
+          story.translations.containsKey('pt-br')) {
+        print('🔄 Tentando fallback para pt-br');
+        return story.getContentForLanguage('pt-br');
+      }
+
+      // Tentar fallback para en se não for o idioma atual
+      if (currentLanguage != 'en' && story.translations.containsKey('en')) {
+        print('🔄 Tentando fallback para en');
+        return story.getContentForLanguage('en');
+      }
+
+      // Se não encontrar nenhum idioma, retornar o primeiro disponível
+      if (story.translations.isNotEmpty) {
+        final firstLanguage = story.translations.keys.first;
+        print('🔄 Usando primeiro idioma disponível: $firstLanguage');
+        return story.getContentForLanguage(firstLanguage);
+      }
+
+      return null;
+    }
+
+    final content = story.getContentForLanguage(currentLanguage);
+    print('✅ Conteúdo encontrado: ${content != null ? "Sim" : "Não"}');
+    return content;
+  }
+
+  /// Verificar se uma história tem conteúdo no idioma atual
+  bool hasContentInCurrentLanguage(StoryModel story) {
+    final currentLanguage = _languageController.currentLanguage;
+
+    // Verificar se tem o idioma atual
+    if (story.translations.containsKey(currentLanguage)) {
+      return true;
+    }
+
+    // Verificar fallbacks
+    if (story.translations.containsKey('pt-br') ||
+        story.translations.containsKey('en') ||
+        story.translations.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Obter idioma atual
+  String get currentLanguage => _languageController.currentLanguage;
+
+  /// Salvar progressão offline
+  Future<void> _saveProgress() async {
+    try {
+      final totalStories = _stories.length;
+      final completedStories = _completedStories.length;
+
+      // Calcular progresso por dificuldade
+      final difficultyProgress = <String, int>{};
+      difficultyProgress['easy'] = _stories
+          .where((s) => s.level == 0 && _completedStories.contains(s.id))
+          .length;
+      difficultyProgress['normal'] = _stories
+          .where((s) => s.level == 1 && _completedStories.contains(s.id))
+          .length;
+      difficultyProgress['hard'] = _stories
+          .where((s) => s.level == 2 && _completedStories.contains(s.id))
+          .length;
+
+      await _storageService.saveProgress(
+        totalStories: totalStories,
+        completedStories: completedStories,
+        difficultyProgress: difficultyProgress,
+      );
+
+      print(
+          '📊 Progresso salvo: $completedStories/$totalStories histórias completadas');
+    } catch (e) {
+      print('Erro ao salvar progresso: $e');
+    }
   }
 }

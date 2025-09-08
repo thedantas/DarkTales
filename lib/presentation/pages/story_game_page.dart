@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/data/models/story_model.dart';
-import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/pages/story_solution_page.dart';
 
@@ -75,23 +75,58 @@ class _StoryGamePageState extends State<StoryGamePage>
 
   @override
   Widget build(BuildContext context) {
-    final appController = Get.find<AppController>();
     final storyController = Get.find<StoryController>();
 
     final content =
-        widget.story.getContentForLanguage(appController.selectedLanguage);
+        storyController.getStoryContentInCurrentLanguage(widget.story);
     final isCompleted = storyController.isStoryCompleted(widget.story.id);
 
     if (content == null) {
       return Scaffold(
         backgroundColor: AppTheme.backgroundColor,
         appBar: AppBar(
-          title: const Text('História'),
+          title: Text(_getStoryTitle()),
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
         ),
-        body: const Center(
-          child: Text(
-            'Conteúdo não disponível neste idioma',
-            style: TextStyle(color: AppTheme.textPrimaryColor),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.language,
+                size: 80,
+                color: AppTheme.accentColor.withOpacity(0.5),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Conteúdo não disponível',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontSize: 24,
+                      color: AppTheme.primaryColor,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Esta história não está disponível no idioma selecionado.',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.textSecondaryColor,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () => Get.back(),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Voltar'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.accentColor,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -100,7 +135,7 @@ class _StoryGamePageState extends State<StoryGamePage>
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: Text('História ${widget.story.id}'),
+        title: Text(_getStoryTitle()),
         leading: IconButton(
           onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back_ios),
@@ -264,6 +299,60 @@ class _StoryGamePageState extends State<StoryGamePage>
                   height: 1.6,
                 ),
           ),
+          const SizedBox(height: 20),
+          // Story image
+          if (widget.story.image.isNotEmpty)
+            Center(
+              child: Container(
+                constraints: const BoxConstraints(
+                  maxWidth: 300,
+                  maxHeight: 200,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: CachedNetworkImage(
+                    imageUrl: _getImageUrl(widget.story.image),
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) {
+                      return Container(
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.image_not_supported,
+                            size: 50,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -392,5 +481,28 @@ class _StoryGamePageState extends State<StoryGamePage>
       backgroundColor: AppTheme.accentColor,
       colorText: AppTheme.textPrimaryColor,
     );
+  }
+
+  String _getStoryTitle() {
+    final storyController = Get.find<StoryController>();
+    final content =
+        storyController.getStoryContentInCurrentLanguage(widget.story);
+    if (content != null && content.title != null) {
+      return content.title;
+    }
+    return 'História ${widget.story.id}';
+  }
+
+  String _getImageUrl(String imagePath) {
+    // Se a imagem já é uma URL completa, retorna ela
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+
+    // Constrói a URL do Firebase Storage
+    // Baseado no exemplo: https://firebasestorage.googleapis.com/v0/b/dark-tales-e67d1.firebasestorage.app/o/id_1.png?alt=media&token=...
+    final bucket = 'dark-tales-e67d1.firebasestorage.app';
+    final encodedPath = Uri.encodeComponent(imagePath);
+    return 'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
   }
 }

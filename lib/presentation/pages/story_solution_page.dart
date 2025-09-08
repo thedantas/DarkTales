@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/data/models/story_model.dart';
-import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 
 class StorySolutionPage extends StatefulWidget {
@@ -92,22 +91,57 @@ class _StorySolutionPageState extends State<StorySolutionPage>
 
   @override
   Widget build(BuildContext context) {
-    final appController = Get.find<AppController>();
     final storyController = Get.find<StoryController>();
 
     final content =
-        widget.story.getContentForLanguage(appController.selectedLanguage);
+        storyController.getStoryContentInCurrentLanguage(widget.story);
 
     if (content == null) {
       return Scaffold(
         backgroundColor: AppTheme.backgroundColor,
         appBar: AppBar(
-          title: const Text('Solução'),
+          title: Text(_getStoryTitle()),
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
         ),
-        body: const Center(
-          child: Text(
-            'Conteúdo não disponível neste idioma',
-            style: TextStyle(color: AppTheme.textPrimaryColor),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.language,
+                size: 80,
+                color: AppTheme.accentColor.withOpacity(0.5),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Conteúdo não disponível',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontSize: 24,
+                      color: AppTheme.primaryColor,
+                    ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Esta história não está disponível no idioma selecionado.',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: AppTheme.textSecondaryColor,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () => Get.back(),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Voltar'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.accentColor,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -116,7 +150,7 @@ class _StorySolutionPageState extends State<StorySolutionPage>
     return Scaffold(
       backgroundColor: AppTheme.backgroundColor,
       appBar: AppBar(
-        title: const Text('Solução'),
+        title: Text(_getStoryTitle()),
         leading: IconButton(
           onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back_ios),
@@ -464,5 +498,15 @@ class _StorySolutionPageState extends State<StorySolutionPage>
       backgroundColor: AppTheme.accentColor,
       colorText: AppTheme.textPrimaryColor,
     );
+  }
+
+  String _getStoryTitle() {
+    final storyController = Get.find<StoryController>();
+    final content =
+        storyController.getStoryContentInCurrentLanguage(widget.story);
+    if (content != null && content.title != null) {
+      return content.title;
+    }
+    return 'História ${widget.story.id}';
   }
 }

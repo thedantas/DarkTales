@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/data/models/story_model.dart';
-import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
 import 'package:darktales/presentation/pages/story_game_page.dart';
 
@@ -138,7 +138,7 @@ class StoryListPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Story icon
+                  // Story image
                   Container(
                     width: 60,
                     height: 60,
@@ -146,10 +146,31 @@ class StoryListPage extends StatelessWidget {
                       color: Colors.white.withOpacity(0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
-                      Icons.auto_stories,
-                      color: Colors.white,
-                      size: 30,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: story.image.isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: _getImageUrl(story.image),
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) {
+                                return const Icon(
+                                  Icons.auto_stories,
+                                  color: Colors.white,
+                                  size: 30,
+                                );
+                              },
+                            )
+                          : const Icon(
+                              Icons.auto_stories,
+                              color: Colors.white,
+                              size: 30,
+                            ),
                     ),
                   ),
 
@@ -168,23 +189,22 @@ class StoryListPage extends StatelessWidget {
 
                   const SizedBox(height: 8),
 
-                  // Difficulty
-                  if (story.difficulty != null)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: difficultyColor.withOpacity(0.8),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        _getDifficultyText(story.difficulty!),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
+                  // Level (nova estrutura) ou Difficulty (estrutura antiga)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _getLevelColor(story.level).withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(8),
                     ),
+                    child: Text(
+                      _getLevelText(story.level),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -263,29 +283,37 @@ class StoryListPage extends StatelessWidget {
   }
 
   String _getStoryTitle(StoryModel story) {
-    final appController = Get.find<AppController>();
-    final content = story.getContentForLanguage(appController.selectedLanguage);
-    if (content != null) {
-      // Extract title from clue text (first sentence or first few words)
-      final words = content.clueText.split(' ');
-      if (words.length > 6) {
-        return '${words.take(6).join(' ')}...';
-      }
-      return content.clueText;
+    final storyController = Get.find<StoryController>();
+    final content = storyController.getStoryContentInCurrentLanguage(story);
+    if (content != null && content.title != null) {
+      return content.title;
     }
     return 'História ${story.id}';
   }
 
-  String _getDifficultyText(String difficulty) {
-    switch (difficulty) {
-      case AppConstants.difficultyEasy:
+  String _getLevelText(int level) {
+    switch (level) {
+      case 0:
         return 'Fácil';
-      case AppConstants.difficultyNormal:
-        return 'Normal';
-      case AppConstants.difficultyHard:
+      case 1:
+        return 'Médio';
+      case 2:
         return 'Difícil';
       default:
-        return difficulty;
+        return 'Desconhecido';
+    }
+  }
+
+  Color _getLevelColor(int level) {
+    switch (level) {
+      case 0:
+        return Colors.green;
+      case 1:
+        return Colors.orange;
+      case 2:
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
 
@@ -364,5 +392,18 @@ class StoryListPage extends StatelessWidget {
         color: isSelected ? AppTheme.accentColor : AppTheme.textPrimaryColor,
       ),
     );
+  }
+
+  String _getImageUrl(String imagePath) {
+    // Se a imagem já é uma URL completa, retorna ela
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+
+    // Constrói a URL do Firebase Storage
+    // Baseado no exemplo: https://firebasestorage.googleapis.com/v0/b/dark-tales-e67d1.firebasestorage.app/o/id_1.png?alt=media&token=...
+    final bucket = 'dark-tales-e67d1.firebasestorage.app';
+    final encodedPath = Uri.encodeComponent(imagePath);
+    return 'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
   }
 }

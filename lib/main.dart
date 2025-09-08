@@ -5,6 +5,7 @@ import 'package:darktales/core/theme/app_theme.dart';
 import 'package:darktales/core/constants/app_constants.dart';
 import 'package:darktales/presentation/controllers/app_controller.dart';
 import 'package:darktales/presentation/controllers/story_controller.dart';
+import 'package:darktales/presentation/controllers/language_controller.dart';
 import 'package:darktales/presentation/pages/splash_page.dart';
 import 'firebase_options.dart';
 
@@ -18,6 +19,7 @@ void main() async {
 
   // Initialize controllers
   Get.put(AppController());
+  Get.put(LanguageController());
   Get.put(StoryController());
 
   runApp(const DarkTalesApp());

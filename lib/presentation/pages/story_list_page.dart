@@ -166,6 +166,8 @@ class StoryListPage extends StatelessWidget {
                           ? CachedNetworkImage(
                               imageUrl: _getImageUrl(story.image),
                               fit: BoxFit.cover,
+                              cacheManager:
+                                  null, // Desabilita o cache para evitar erro de banco readonly
                               placeholder: (context, url) => const Center(
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
@@ -173,6 +175,9 @@ class StoryListPage extends StatelessWidget {
                                 ),
                               ),
                               errorWidget: (context, url, error) {
+                                print(
+                                    '🖼️ [Lista] Erro ao carregar imagem: $error');
+                                print('🖼️ [Lista] URL da imagem: $url');
                                 return const Icon(
                                   Icons.auto_stories,
                                   color: Colors.white,
@@ -420,11 +425,8 @@ class StoryListPage extends StatelessWidget {
   }
 
   String _getImageUrl(String imagePath) {
-    print('🖼️ [Lista] Construindo URL para imagem: $imagePath');
-
     // Se a imagem já é uma URL completa, retorna ela
     if (imagePath.startsWith('http')) {
-      print('🖼️ [Lista] URL já é completa: $imagePath');
       return imagePath;
     }
 
@@ -435,7 +437,6 @@ class StoryListPage extends StatelessWidget {
     final url =
         'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
 
-    print('🖼️ [Lista] URL construída: $url');
     return url;
   }
 }

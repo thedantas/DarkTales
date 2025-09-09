@@ -9,6 +9,7 @@ import 'package:darktales/presentation/controllers/language_controller.dart';
 import 'package:darktales/core/services/analytics_service.dart';
 import 'package:darktales/core/services/ads_service.dart';
 import 'package:darktales/core/services/purchase_service.dart';
+import 'package:darktales/core/services/storage_service.dart';
 import 'package:darktales/presentation/pages/splash_page.dart';
 import 'firebase_options.dart';
 
@@ -21,6 +22,7 @@ void main() async {
   );
 
   // Initialize services
+  await StorageService().init();
   Get.put(AnalyticsService());
   Get.put(AdsService());
   Get.put(PurchaseService());

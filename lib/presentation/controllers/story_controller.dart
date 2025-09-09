@@ -58,10 +58,14 @@ class StoryController extends GetxController {
 
   Future<void> _loadCompletedStories() async {
     try {
+      print('📊 [StoryController] _loadCompletedStories - Starting...');
       final completed = await _storageService.getCompletedStories();
+      print('📊 [StoryController] _loadCompletedStories - Loaded: $completed');
       _completedStories.value = completed;
+      print(
+          '📊 [StoryController] _loadCompletedStories - Set to observable: ${_completedStories.value}');
     } catch (e) {
-      print('Error loading completed stories: $e');
+      print('❌ [StoryController] Error loading completed stories: $e');
     }
   }
 
@@ -99,16 +103,42 @@ class StoryController extends GetxController {
 
   Future<void> markStoryAsCompleted(int storyId) async {
     try {
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Starting for story $storyId...');
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Current completed stories: ${_completedStories.value}');
+
       await _storageService.addCompletedStory(storyId);
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Added to storage successfully');
+
       _completedStories.add(storyId);
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Added to observable list');
+
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Histórias concluídas após adicionar: ${_completedStories.length}');
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Lista de histórias concluídas: ${_completedStories.value}');
 
       // Save progress
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Calling _saveProgress...');
       await _saveProgress();
+      print(
+          '📊 [StoryController] markStoryAsCompleted - _saveProgress completed');
 
       // Mostrar anúncio interstitial após completar história
+      print(
+          '📊 [StoryController] markStoryAsCompleted - Showing interstitial ad...');
       AdsService.to.showInterstitialAd();
+
+      print(
+          '📊 [StoryController] markStoryAsCompleted - História $storyId marcada como concluída com sucesso!');
     } catch (e) {
-      print('Error marking story as completed: $e');
+      print('❌ [StoryController] Error marking story as completed: $e');
+      print('❌ [StoryController] Error type: ${e.runtimeType}');
+      print('❌ [StoryController] Error stack trace: ${StackTrace.current}');
     }
   }
 
@@ -260,8 +290,13 @@ class StoryController extends GetxController {
   /// Salvar progressão offline
   Future<void> _saveProgress() async {
     try {
+      print('📊 [StoryController] _saveProgress - Starting...');
       final totalStories = _stories.length;
       final completedStories = _completedStories.length;
+
+      print('📊 [StoryController] _saveProgress - totalStories: $totalStories');
+      print(
+          '📊 [StoryController] _saveProgress - completedStories: $completedStories');
 
       // Calcular progresso por dificuldade
       final difficultyProgress = <String, int>{};
@@ -275,11 +310,16 @@ class StoryController extends GetxController {
           .where((s) => s.level == 2 && _completedStories.contains(s.id))
           .length;
 
+      print(
+          '📊 [StoryController] _saveProgress - difficultyProgress: $difficultyProgress');
+
       await _storageService.saveProgress(
         totalStories: totalStories,
         completedStories: completedStories,
         difficultyProgress: difficultyProgress,
       );
+
+      print('📊 [StoryController] _saveProgress - Progress saved successfully');
 
       // Log do progresso no Analytics
       AnalyticsService.to.logProgressUpdate(
@@ -291,7 +331,7 @@ class StoryController extends GetxController {
       print(
           '📊 Progresso salvo: $completedStories/$totalStories histórias completadas');
     } catch (e) {
-      print('Erro ao salvar progresso: $e');
+      print('❌ [StoryController] Erro ao salvar progresso: $e');
     }
   }
 }

@@ -153,6 +153,10 @@ class HomePage extends StatelessWidget {
     final completionRate =
         totalStories > 0 ? (completedStories / totalStories * 100).round() : 0;
 
+    print('📊 [Home] Total de histórias: $totalStories');
+    print('📊 [Home] Histórias concluídas: $completedStories');
+    print('📊 [Home] Percentual de conclusão: $completionRate%');
+
     return Row(
       children: [
         Expanded(

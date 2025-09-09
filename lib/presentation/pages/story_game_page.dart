@@ -26,6 +26,7 @@ class _StoryGamePageState extends State<StoryGamePage>
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  String? _cachedImageUrl;
 
   @override
   void initState() {
@@ -151,6 +152,10 @@ class _StoryGamePageState extends State<StoryGamePage>
             icon: const Icon(Icons.share),
           ),
         ],
+        elevation: 0,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        bottom: null,
       ),
       body: AnimatedBuilder(
         animation: _fadeAnimation,
@@ -164,9 +169,6 @@ class _StoryGamePageState extends State<StoryGamePage>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Story card
-                    _buildStoryCard(context, content),
-
                     const SizedBox(height: 24),
 
                     // Clue section
@@ -226,24 +228,6 @@ class _StoryGamePageState extends State<StoryGamePage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(
-                Icons.visibility,
-                color: AppTheme.accentColor,
-                size: 24,
-              ),
-              const SizedBox(width: 12),
-              Text(
-                'Pista',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: AppTheme.textPrimaryColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
           Text(
             content.clueText,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -275,6 +259,8 @@ class _StoryGamePageState extends State<StoryGamePage>
                   child: CachedNetworkImage(
                     imageUrl: _getImageUrl(widget.story.image),
                     fit: BoxFit.cover,
+                    cacheManager:
+                        null, // Desabilita o cache para evitar erro de banco readonly
                     placeholder: (context, url) => Container(
                       height: 150,
                       decoration: BoxDecoration(
@@ -286,6 +272,8 @@ class _StoryGamePageState extends State<StoryGamePage>
                       ),
                     ),
                     errorWidget: (context, url, error) {
+                      print('🖼️ Erro ao carregar imagem: $error');
+                      print('🖼️ URL da imagem: $url');
                       return Container(
                         height: 150,
                         decoration: BoxDecoration(
@@ -475,12 +463,14 @@ class _StoryGamePageState extends State<StoryGamePage>
   }
 
   String _getImageUrl(String imagePath) {
-    print('🖼️ Construindo URL para imagem: $imagePath');
-
     // Se a imagem já é uma URL completa, retorna ela
     if (imagePath.startsWith('http')) {
-      print('🖼️ URL já é completa: $imagePath');
       return imagePath;
+    }
+
+    // Usa cache se disponível
+    if (_cachedImageUrl != null) {
+      return _cachedImageUrl!;
     }
 
     // Constrói a URL do Firebase Storage
@@ -490,7 +480,8 @@ class _StoryGamePageState extends State<StoryGamePage>
     final url =
         'https://firebasestorage.googleapis.com/v0/b/$bucket/o/$encodedPath?alt=media';
 
-    print('🖼️ URL construída: $url');
+    // Cacheia a URL
+    _cachedImageUrl = url;
     return url;
   }
 }

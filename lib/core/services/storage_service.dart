@@ -43,26 +43,50 @@ class StorageService {
   // Completed stories
   Future<List<int>> getCompletedStories() async {
     final storiesString = _prefs?.getString(AppConstants.keyCompletedStories);
+    print('📊 [Storage] getCompletedStories - String: "$storiesString"');
     if (storiesString != null && storiesString.isNotEmpty) {
       try {
-        return storiesString
-            .split(',')
-            .map((s) => int.parse(s.trim()))
-            .toList();
+        final parts = storiesString.split(',');
+        print('📊 [Storage] Parts: $parts');
+        final result = <int>[];
+        for (final part in parts) {
+          final trimmed = part.trim();
+          if (trimmed.isNotEmpty) {
+            print('📊 [Storage] Parsing part: "$trimmed"');
+            try {
+              final parsed = int.parse(trimmed);
+              result.add(parsed);
+              print('📊 [Storage] Successfully parsed: $parsed');
+            } catch (e) {
+              print('❌ [Storage] Error parsing part "$trimmed": $e');
+              // Skip invalid parts instead of crashing
+            }
+          }
+        }
+        print('📊 [Storage] Parsed result: $result');
+        return result;
       } catch (e) {
-        print('Error parsing completed stories: $e');
+        print('❌ [Storage] Error parsing completed stories: $e');
+        print('❌ [Storage] String was: "$storiesString"');
         return [];
       }
     }
+    print('📊 [Storage] No completed stories found');
     return [];
   }
 
   Future<void> addCompletedStory(int storyId) async {
+    print('📊 [Storage] addCompletedStory - Adding story ID: $storyId');
     final completedStories = await getCompletedStories();
+    print('📊 [Storage] Current completed stories: $completedStories');
     if (!completedStories.contains(storyId)) {
       completedStories.add(storyId);
-      await _prefs?.setString(
-          AppConstants.keyCompletedStories, completedStories.join(','));
+      final newString = completedStories.join(',');
+      print('📊 [Storage] Saving new string: "$newString"');
+      await _prefs?.setString(AppConstants.keyCompletedStories, newString);
+      print('📊 [Storage] Story $storyId added successfully');
+    } else {
+      print('📊 [Storage] Story $storyId already exists');
     }
   }
 
@@ -94,19 +118,35 @@ class StorageService {
   }
 
   Future<Map<String, dynamic>> getProgress() async {
-    final totalStories = _prefs?.getInt('total_stories') ?? 0;
-    final completedStories = _prefs?.getInt('completed_stories') ?? 0;
+    try {
+      print('📊 [Storage] getProgress - Getting progress data...');
+      final totalStories = _prefs?.getInt('total_stories') ?? 0;
+      final completedStories = _prefs?.getInt('completed_stories') ?? 0;
 
-    final difficultyProgress = <String, int>{};
-    difficultyProgress['easy'] = _prefs?.getInt('difficulty_easy') ?? 0;
-    difficultyProgress['normal'] = _prefs?.getInt('difficulty_normal') ?? 0;
-    difficultyProgress['hard'] = _prefs?.getInt('difficulty_hard') ?? 0;
+      print('📊 [Storage] getProgress - totalStories: $totalStories');
+      print('📊 [Storage] getProgress - completedStories: $completedStories');
 
-    return {
-      'totalStories': totalStories,
-      'completedStories': completedStories,
-      'difficultyProgress': difficultyProgress,
-    };
+      final difficultyProgress = <String, int>{};
+      difficultyProgress['easy'] = _prefs?.getInt('difficulty_easy') ?? 0;
+      difficultyProgress['normal'] = _prefs?.getInt('difficulty_normal') ?? 0;
+      difficultyProgress['hard'] = _prefs?.getInt('difficulty_hard') ?? 0;
+
+      print(
+          '📊 [Storage] getProgress - difficultyProgress: $difficultyProgress');
+
+      return {
+        'totalStories': totalStories,
+        'completedStories': completedStories,
+        'difficultyProgress': difficultyProgress,
+      };
+    } catch (e) {
+      print('❌ [Storage] Error in getProgress: $e');
+      return {
+        'totalStories': 0,
+        'completedStories': 0,
+        'difficultyProgress': <String, int>{},
+      };
+    }
   }
 
   // Clear all data

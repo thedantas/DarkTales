@@ -60,9 +60,9 @@ class AnalyticsService extends GetxService {
       await _analytics.logEvent(
         name: 'story_opened',
         parameters: {
-          'story_id': storyId,
+          'story_id': storyId.toString(),
           'story_title': storyTitle,
-          'difficulty': difficulty,
+          'difficulty': difficulty.toString(),
           'difficulty_name': _getDifficultyName(difficulty),
         },
       );
@@ -79,7 +79,7 @@ class AnalyticsService extends GetxService {
       await _analytics.logEvent(
         name: 'solution_viewed',
         parameters: {
-          'story_id': storyId,
+          'story_id': storyId.toString(),
           'story_title': storyTitle,
         },
       );
@@ -96,11 +96,11 @@ class AnalyticsService extends GetxService {
       await _analytics.logEvent(
         name: 'story_completed',
         parameters: {
-          'story_id': storyId,
+          'story_id': storyId.toString(),
           'story_title': storyTitle,
-          'difficulty': difficulty,
+          'difficulty': difficulty.toString(),
           'difficulty_name': _getDifficultyName(difficulty),
-          'time_spent_seconds': timeSpent,
+          'time_spent_seconds': timeSpent.toString(),
         },
       );
       print(
@@ -117,7 +117,7 @@ class AnalyticsService extends GetxService {
       await _analytics.logEvent(
         name: 'story_shared',
         parameters: {
-          'story_id': storyId,
+          'story_id': storyId.toString(),
           'story_title': storyTitle,
           'share_type': shareType, // 'story' ou 'solution'
         },
@@ -222,13 +222,13 @@ class AnalyticsService extends GetxService {
       await _analytics.logEvent(
         name: 'progress_update',
         parameters: {
-          'total_stories': totalStories,
-          'completed_stories': completedStories,
+          'total_stories': totalStories.toString(),
+          'completed_stories': completedStories.toString(),
           'completion_percentage':
-              ((completedStories / totalStories) * 100).round(),
-          'easy_completed': difficultyProgress['easy'] ?? 0,
-          'normal_completed': difficultyProgress['normal'] ?? 0,
-          'hard_completed': difficultyProgress['hard'] ?? 0,
+              ((completedStories / totalStories) * 100).round().toString(),
+          'easy_completed': (difficultyProgress['easy'] ?? 0).toString(),
+          'normal_completed': (difficultyProgress['normal'] ?? 0).toString(),
+          'hard_completed': (difficultyProgress['hard'] ?? 0).toString(),
         },
       );
       print(
@@ -246,7 +246,7 @@ class AnalyticsService extends GetxService {
         parameters: {
           'milestone_type':
               milestoneType, // 'first_story', '10_stories', 'all_easy', etc.
-          'value': value,
+          'value': value.toString(),
         },
       );
       print('📊 Milestone Reached: $milestoneType = $value');
@@ -284,7 +284,7 @@ class AnalyticsService extends GetxService {
         name: 'load_time',
         parameters: {
           'operation': operation, // 'stories_load', 'firebase_connect', etc.
-          'milliseconds': milliseconds,
+          'milliseconds': milliseconds.toString(),
         },
       );
       print('📊 Load Time: $operation = ${milliseconds}ms');
@@ -299,9 +299,21 @@ class AnalyticsService extends GetxService {
   Future<void> logCustomEvent(String eventName,
       {Map<String, dynamic>? parameters}) async {
     try {
+      // Convert dynamic values to Object for Firebase Analytics
+      Map<String, Object>? convertedParams;
+      if (parameters != null) {
+        convertedParams = parameters.map((key, value) {
+          // Convert int to String to avoid cast errors
+          if (value is int) {
+            return MapEntry(key, value.toString());
+          }
+          return MapEntry(key, value as Object);
+        });
+      }
+
       await _analytics.logEvent(
         name: eventName,
-        parameters: parameters?.cast<String, Object>(),
+        parameters: convertedParams,
       );
       print('📊 Custom Event: $eventName');
     } catch (e) {

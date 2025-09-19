@@ -1,0 +1,15 @@
+{
+  "id": 21,
+  "level": 1,
+  "image": "images/021.png",
+  "pt-br": {
+    "title": "Teste Simples",
+    "clue_text": "Esta é uma história de teste.",
+    "answer_text": "A resposta é que está funcionando."
+  },
+  "en": {
+    "title": "Simple Test",
+    "clue_text": "This is a test story.",
+    "answer_text": "The answer is that it's working."
+  }
+}

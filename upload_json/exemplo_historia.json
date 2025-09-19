@@ -1,0 +1,295 @@
+{
+  "stories": [
+    {
+      "id": 1,
+      "level": 2,
+      "image": "images/001.png",
+      "pt-br": {
+        "title": "O Jogo Mortal",
+        "clue_text": "Um homem foi encontrado morto diante da TV, o controle ainda na mão. A polícia disse que foi suicídio.",
+        "answer_text": "Ele estava jogando roleta russa pela televisão, combinado com cúmplices online: quem perdesse, deveria se matar em live."
+      },
+      "en": {
+        "title": "The Deadly Game",
+        "clue_text": "A man was found dead in front of the TV, the remote still in his hand. The police said it was suicide.",
+        "answer_text": "He was playing Russian roulette through television, in a pact with online accomplices: whoever lost had to kill themselves live."
+      },
+      "es": {
+        "title": "El Juego Mortal",
+        "clue_text": "Un hombre fue encontrado muerto frente al televisor, con el control remoto aún en la mano. La policía dijo que fue un suicidio.",
+        "answer_text": "Estaba jugando a la ruleta rusa a través de la televisión, en un pacto con cómplices en línea: quien perdiera debía suicidarse en vivo."
+      },
+      "fr": {
+        "title": "Le Jeu Mortel",
+        "clue_text": "Un homme a été retrouvé mort devant la télévision, la télécommande encore à la main. La police a dit qu’il s’agissait d’un suicide.",
+        "answer_text": "Il jouait à la roulette russe à travers la télévision, dans un pacte avec des complices en ligne : celui qui perdait devait se suicider en direct."
+      },
+      "de": {
+        "title": "Das Tödliche Spiel",
+        "clue_text": "Ein Mann wurde tot vor dem Fernseher gefunden, die Fernbedienung noch in der Hand. Die Polizei sagte, es sei Selbstmord gewesen.",
+        "answer_text": "Er spielte Russisches Roulette über das Fernsehen, in einem Pakt mit Online-Komplizen: Wer verlor, musste sich live töten."
+      },
+      "it": {
+        "title": "Il Gioco Mortale",
+        "clue_text": "Un uomo è stato trovato morto davanti alla TV, il telecomando ancora in mano. La polizia disse che era suicidio.",
+        "answer_text": "Stava giocando alla roulette russa attraverso la televisione, in un patto con complici online: chi perdeva doveva uccidersi in diretta."
+      },
+      "ja": {
+        "title": "致命的なゲーム",
+        "clue_text": "男がテレビの前で死んでいるのが発見された。手にはまだリモコンを握っていた。警察は自殺だと言った。",
+        "answer_text": "彼はオンラインの仲間とテレビを通じてロシアンルーレットをしていた。負けた者はライブで自殺しなければならなかった。"
+      },
+      "ru": {
+        "title": "Смертельная игра",
+        "clue_text": "Мужчину нашли мёртвым перед телевизором, пульт всё ещё был в его руке. Полиция заявила, что это было самоубийство.",
+        "answer_text": "Он играл в русскую рулетку через телевизор, в сговоре с онлайн-приятелями: кто проигрывал, должен был убить себя в прямом эфире."
+      },
+      "zh-cn": {
+        "title": "致命游戏",
+        "clue_text": "一名男子被发现死在电视机前，手里还握着遥控器。警方称这是自杀。",
+        "answer_text": "他通过电视与网络同伙玩俄罗斯轮盘赌：谁输了，就必须现场直播自杀。"
+      },
+      "zh-tw": {
+        "title": "致命遊戲",
+        "clue_text": "一名男子被發現死在電視機前，手裡還握著遙控器。警方稱這是自殺。",
+        "answer_text": "他透過電視與線上同夥玩俄羅斯輪盤：誰輸了，就必須在直播中自殺。"
+      },
+      "ko": {
+        "title": "치명적인 게임",
+        "clue_text": "남자가 TV 앞에서 죽은 채로 발견되었다. 손에는 여전히 리모컨이 쥐어져 있었다. 경찰은 자살이라고 말했다.",
+        "answer_text": "그는 온라인 공범들과 함께 TV를 통해 러시안 룰렛을 하고 있었다. 진 사람이 생방송으로 자살해야 했다."
+      },
+      "hi": {
+        "title": "घातक खेल",
+        "clue_text": "एक आदमी टीवी के सामने मृत पाया गया, हाथ में अभी भी रिमोट था। पुलिस ने कहा यह आत्महत्या थी।",
+        "answer_text": "वह ऑनलाइन साथियों के साथ टीवी पर रूसी रूले खेल रहा था: जो हारता, उसे लाइव आत्महत्या करनी पड़ती।"
+      },
+      "ar": {
+        "title": "اللعبة المميتة",
+        "clue_text": "تم العثور على رجل ميت أمام التلفاز، وبيده جهاز التحكم عن بعد. قالت الشرطة إنه انتحار.",
+        "answer_text": "كان يلعب الروليت الروسي عبر التلفاز مع شركاء عبر الإنترنت: من يخسر يجب أن ينتحر على الهواء مباشرة."
+      },
+      "tr": {
+        "title": "Ölümcül Oyun",
+        "clue_text": "Bir adam TV’nin önünde ölü bulundu, elinde hâlâ kumanda vardı. Polis bunun intihar olduğunu söyledi.",
+        "answer_text": "O, çevrimiçi suç ortaklarıyla televizyon üzerinden Rus ruleti oynuyordu: kaybeden canlı yayında kendini öldürmek zorundaydı."
+      },
+      "pl": {
+        "title": "Śmiertelna Gra",
+        "clue_text": "Mężczyzna został znaleziony martwy przed telewizorem, z pilotem w ręku. Policja powiedziała, że to było samobójstwo.",
+        "answer_text": "Grał w rosyjską ruletkę przez telewizję, w zmowie z internetowymi wspólnikami: kto przegrał, musiał się zabić na żywo."
+      },
+      "nl": {
+        "title": "Het Dodelijke Spel",
+        "clue_text": "Een man werd dood aangetroffen voor de tv, de afstandsbediening nog in zijn hand. De politie zei dat het zelfmoord was.",
+        "answer_text": "Hij speelde Russische roulette via de televisie, in een pact met online handlangers: wie verloor, moest zichzelf live doden."
+      },
+      "he": {
+        "title": "המשחק הקטלני",
+        "clue_text": "גבר נמצא מת מול הטלוויזיה, השלט עדיין בידו. המשטרה אמרה שזה היה התאבדות.",
+        "answer_text": "הוא שיחק ברולטה רוסית דרך הטלוויזיה עם שותפים מקוונים: מי שהפסיד נאלץ להרוג את עצמו בשידור חי."
+      },
+      "sv": {
+        "title": "Det Dödiga Spelet",
+        "clue_text": "En man hittades död framför TV:n, fjärrkontrollen fortfarande i handen. Polisen sa att det var självmord.",
+        "answer_text": "Han spelade rysk roulette genom TV:n, i ett förbund med nätkompanjoner: den som förlorade var tvungen att ta livet av sig live."
+      },
+      "no": {
+        "title": "Det Dødelige Spillet",
+        "clue_text": "En mann ble funnet død foran TV-en, fjernkontrollen fortsatt i hånden. Politiet sa det var selvmord.",
+        "answer_text": "Han spilte russisk rulett gjennom TV-en, i en pakt med online-medskyldige: den som tapte måtte ta sitt eget liv direkte."
+      },
+      "da": {
+        "title": "Det Dødelige Spil",
+        "clue_text": "En mand blev fundet død foran fjernsynet, fjernbetjeningen stadig i hånden. Politiet sagde, at det var selvmord.",
+        "answer_text": "Han spillede russisk roulette gennem fjernsynet, i en pagt med online-medskyldige: den der tabte måtte tage sit eget liv live."
+      },
+      "fi": {
+        "title": "Kuolettava Peli",
+        "clue_text": "Mies löydettiin kuolleena television edestä, kaukosäädin yhä kädessä. Poliisi sanoi, että se oli itsemurha.",
+        "answer_text": "Hän pelasi venäläistä rulettia television kautta, liittoutuneena verkossa rikoskumppaneiden kanssa: häviäjän piti tappaa itsensä suorassa lähetyksessä."
+      },
+      "cs": {
+        "title": "Smrtící Hra",
+        "clue_text": "Muž byl nalezen mrtvý před televizí, s dálkovým ovladačem stále v ruce. Policie řekla, že to byla sebevražda.",
+        "answer_text": "Hrál ruskou ruletu prostřednictvím televize, ve spolku s online komplici: kdo prohrál, musel se zabít naživo."
+      },
+      "el": {
+        "title": "Το Θανάσιμο Παιχνίδι",
+        "clue_text": "Ένας άνδρας βρέθηκε νεκρός μπροστά στην τηλεόραση, με το τηλεκοντρόλ ακόμα στο χέρι. Η αστυνομία είπε ότι ήταν αυτοκτονία.",
+        "answer_text": "Έπαιζε ρώσικη ρουλέτα μέσω της τηλεόρασης, σε συμφωνία με διαδικτυακούς συνεργούς: όποιος έχανε έπρεπε να αυτοκτονήσει ζωντανά."
+      },
+      "th": {
+        "title": "เกมมรณะ",
+        "clue_text": "พบชายคนหนึ่งเสียชีวิตหน้าทีวี รีโมทยังคงอยู่ในมือ ตำรวจบอกว่าเป็นการฆ่าตัวตาย",
+        "answer_text": "เขากำลังเล่นรูเล็ตรัสเซียผ่านโทรทัศน์ โดยมีข้อตกลงกับผู้สมรู้ร่วมคิดออนไลน์: ใครแพ้ต้องฆ่าตัวตายสดๆ"
+      },
+      "vi": {
+        "title": "Trò Chơi Chết Người",
+        "clue_text": "Một người đàn ông được phát hiện chết trước TV, tay vẫn cầm điều khiển. Cảnh sát nói đó là tự sát.",
+        "answer_text": "Anh ta đang chơi cò quay Nga qua truyền hình, trong một thỏa thuận với đồng phạm trực tuyến: ai thua phải tự sát trực tiếp."
+      },
+      "ms": {
+        "title": "Permainan Maut",
+        "clue_text": "Seorang lelaki ditemui mati di depan TV, alat kawalan jauh masih di tangannya. Polis berkata ia bunuh diri.",
+        "answer_text": "Dia bermain rolet Rusia melalui televisyen, berpakat dengan rakan sejenayah dalam talian: sesiapa yang kalah perlu membunuh diri secara langsung."
+      },
+      "uk": {
+        "title": "Смертельна Гра",
+        "clue_text": "Чоловіка знайшли мертвим перед телевізором, пульт ще був у його руці. Поліція сказала, що це було самогубство.",
+        "answer_text": "Він грав у російську рулетку через телевізор, у змові з онлайн-спільниками: хто програвав, мав убити себе наживо."
+      },
+      "ro": {
+        "title": "Jocul Mortal",
+        "clue_text": "Un bărbat a fost găsit mort în fața televizorului, cu telecomanda încă în mână. Poliția a spus că a fost sinucidere.",
+        "answer_text": "El juca ruleta rusească prin intermediul televiziunii, într-un pact cu complici online: cine pierdea trebuia să se sinucidă în direct."
+      }
+    },
+
+    {
+      "id": 2,
+      "level": 2,
+      "image": "images/002.png",
+      "pt-br": {
+        "title": "A Biblioteca Silenciosa",
+        "clue_text": "Um estudante foi achado morto entre livros, com a cabeça mergulhada em uma pilha.",
+        "answer_text": "Alguém empilhou dezenas de dicionários sobre ele enquanto dormia; o peso quebrou seu pescoço lentamente."
+      },
+      "en": {
+        "title": "The Silent Library",
+        "clue_text": "A student was found dead among books, his head buried in a pile.",
+        "answer_text": "Someone stacked dozens of dictionaries on him while he slept; the weight slowly broke his neck."
+      },
+      "es": {
+        "title": "La Biblioteca Silenciosa",
+        "clue_text": "Un estudiante fue hallado muerto entre libros, con la cabeza sumergida en una pila.",
+        "answer_text": "Alguien apiló decenas de diccionarios sobre él mientras dormía; el peso le rompió el cuello lentamente."
+      },
+      "fr": {
+        "title": "La Bibliothèque Silencieuse",
+        "clue_text": "Un étudiant a été retrouvé mort parmi des livres, la tête enfouie dans une pile.",
+        "answer_text": "Quelqu’un a empilé des dizaines de dictionnaires sur lui pendant qu’il dormait ; le poids lui a brisé la nuque lentement."
+      },
+      "de": {
+        "title": "Die Stille Bibliothek",
+        "clue_text": "Ein Student wurde tot zwischen Büchern gefunden, den Kopf in einem Stapel vergraben.",
+        "answer_text": "Jemand stapelte Dutzende Wörterbücher auf ihn, während er schlief; das Gewicht brach ihm langsam das Genick."
+      },
+      "it": {
+        "title": "La Biblioteca Silenziosa",
+        "clue_text": "Uno studente è stato trovato morto tra i libri, con la testa immersa in una pila.",
+        "answer_text": "Qualcuno ha impilato decine di dizionari su di lui mentre dormiva; il peso gli ha rotto lentamente il collo."
+      },
+      "ja": {
+        "title": "静かな図書館",
+        "clue_text": "学生が本の山に頭を埋めたまま死んでいるのが見つかった。",
+        "answer_text": "誰かが彼の眠っている間に何十冊もの辞書を積み上げた。重みで彼の首はゆっくりと折れた。"
+      },
+      "ru": {
+        "title": "Тихая библиотека",
+        "clue_text": "Студента нашли мёртвым среди книг, его голова была зарыта в стопке.",
+        "answer_text": "Кто-то сложил на него десятки словарей, пока он спал; вес медленно сломал ему шею."
+      },
+      "zh-cn": {
+        "title": "寂静的图书馆",
+        "clue_text": "一名学生被发现死在书堆中，头埋在一堆书里。",
+        "answer_text": "有人在他睡觉时堆了几十本字典在他身上；重量慢慢折断了他的脖子。"
+      },
+      "zh-tw": {
+        "title": "寂靜的圖書館",
+        "clue_text": "一名學生被發現死在書堆中，頭埋在一堆書裡。",
+        "answer_text": "有人在他睡覺時堆了幾十本字典在他身上；重量慢慢折斷了他的脖子。"
+      },
+      "ko": {
+        "title": "조용한 도서관",
+        "clue_text": "한 학생이 책 더미 속에 머리를 묻은 채 죽은 상태로 발견되었다.",
+        "answer_text": "누군가 그가 자는 동안 수십 권의 사전을 쌓았다. 무게가 서서히 그의 목을 부러뜨렸다."
+      },
+      "hi": {
+        "title": "मौन पुस्तकालय",
+        "clue_text": "एक छात्र किताबों के बीच मृत पाया गया, उसका सिर ढेर में दबा हुआ था।",
+        "answer_text": "किसी ने उसके सोते समय उस पर दर्जनों शब्दकोश रख दिए; भार ने धीरे-धीरे उसकी गर्दन तोड़ दी।"
+      },
+      "ar": {
+        "title": "المكتبة الصامتة",
+        "clue_text": "تم العثور على طالب ميت بين الكتب، رأسه مدفون في كومة.",
+        "answer_text": "قام شخص ما بتكديس عشرات القواميس عليه أثناء نومه؛ الوزن كسر رقبته ببطء."
+      },
+      "tr": {
+        "title": "Sessiz Kütüphane",
+        "clue_text": "Bir öğrenci kitapların arasında ölü bulundu, başı bir yığının içine gömülmüş halde.",
+        "answer_text": "Biri, o uyurken üzerine onlarca sözlük yığdı; ağırlık yavaşça boynunu kırdı."
+      },
+      "pl": {
+        "title": "Cicha Biblioteka",
+        "clue_text": "Student został znaleziony martwy wśród książek, z głową zanurzoną w stosie.",
+        "answer_text": "Ktoś ułożył na nim dziesiątki słowników, gdy spał; ciężar powoli złamał mu kark."
+      },
+      "nl": {
+        "title": "De Stille Bibliotheek",
+        "clue_text": "Een student werd dood aangetroffen tussen boeken, zijn hoofd begraven in een stapel.",
+        "answer_text": "Iemand stapelde tientallen woordenboeken op hem terwijl hij sliep; het gewicht brak langzaam zijn nek."
+      },
+      "he": {
+        "title": "הספרייה השקטה",
+        "clue_text": "סטודנט נמצא מת בין ספרים, ראשו קבור בערימה.",
+        "answer_text": "מישהו ערם עליו עשרות מילונים בזמן שישן; המשקל שבר את צווארו לאט."
+      },
+      "sv": {
+        "title": "Det Tysta Biblioteket",
+        "clue_text": "En student hittades död bland böcker, huvudet begravt i en hög.",
+        "answer_text": "Någon staplade dussintals ordböcker på honom medan han sov; vikten bröt långsamt hans nacke."
+      },
+      "no": {
+        "title": "Det Tause Biblioteket",
+        "clue_text": "En student ble funnet død blant bøker, hodet begravd i en stabel.",
+        "answer_text": "Noen stablet dusinvis av ordbøker på ham mens han sov; vekten brakk sakte nakken hans."
+      },
+      "da": {
+        "title": "Det Tavse Bibliotek",
+        "clue_text": "En studerende blev fundet død blandt bøger, hovedet begravet i en bunke.",
+        "answer_text": "Nogen stablede snesevis af ordbøger på ham, mens han sov; vægten brækkede langsomt hans nakke."
+      },
+      "fi": {
+        "title": "Hiljainen Kirjasto",
+        "clue_text": "Opiskelija löytyi kuolleena kirjojen joukosta, pää hautautuneena kasaan.",
+        "answer_text": "Joku pinoi kymmeniä sanakirjoja hänen päälleen hänen nukkuessaan; paino mursi hitaasti hänen niskansa."
+      },
+      "cs": {
+        "title": "Tichá Knihovna",
+        "clue_text": "Student byl nalezen mrtvý mezi knihami, hlava ponořená v hromadě.",
+        "answer_text": "Někdo na něj naskládal desítky slovníků, když spal; váha mu pomalu zlomila vaz."
+      },
+      "el": {
+        "title": "Η Σιωπηλή Βιβλιοθήκη",
+        "clue_text": "Ένας φοιτητής βρέθηκε νεκρός ανάμεσα σε βιβλία, με το κεφάλι θαμμένο σε μια στοίβα.",
+        "answer_text": "Κάποιος στοίβαξε δεκάδες λεξικά πάνω του ενώ κοιμόταν· το βάρος έσπασε αργά τον λαιμό του."
+      },
+      "th": {
+        "title": "ห้องสมุดเงียบ",
+        "clue_text": "พบศพนักเรียนอยู่ท่ามกลางกองหนังสือ ศีรษะจมอยู่ในกองนั้น",
+        "answer_text": "มีคนกองพจนานุกรมหลายสิบเล่มบนตัวเขาขณะเขาหลับ; น้ำหนักค่อยๆ หักคอเขา"
+      },
+      "vi": {
+        "title": "Thư Viện Im Lặng",
+        "clue_text": "Một sinh viên được phát hiện đã chết giữa sách vở, đầu chôn trong một đống.",
+        "answer_text": "Ai đó đã chất hàng chục cuốn từ điển lên anh ta khi anh ta đang ngủ; sức nặng từ từ bẻ gãy cổ anh ta."
+      },
+      "ms": {
+        "title": "Perpustakaan Senyap",
+        "clue_text": "Seorang pelajar ditemui mati di antara buku-buku, kepalanya terkubur dalam timbunan.",
+        "answer_text": "Seseorang menumpuk berpuluh-puluh kamus di atasnya semasa dia tidur; berat itu perlahan-lahan mematahkan lehernya."
+      },
+      "uk": {
+        "title": "Тиха Бібліотека",
+        "clue_text": "Студента знайшли мертвим серед книжок, голова була занурена в купу.",
+        "answer_text": "Хтось склав на нього десятки словників, поки він спав; вага повільно зламала йому шию."
+      },
+      "ro": {
+        "title": "Biblioteca Tăcută",
+        "clue_text": "Un student a fost găsit mort printre cărți, cu capul îngropat într-o grămadă.",
+        "answer_text": "Cineva a pus zeci de dicționare peste el în timp ce dormea; greutatea i-a rupt gâtul încet."
+      }
+    }
+  ]
+}
